@@ -60,9 +60,10 @@ int main(int argc, char** argv)
     Mesh mesh(settings);
     Light light(settings);
     
-    mesh.GenerateTorus(4.f, 2.5f);
-    mesh.Rotate(M_PI / 4.f, Axis::Y);
-    mesh.Rotate(M_PI / 4.f, Axis::X);
+    mesh.GenerateTorus(settings.GetTorusMajorRadius(), settings.GetTorusMinorRadius());
+    if (settings.GetInitialRotationY() != 0.f) mesh.Rotate(settings.GetInitialRotationY(), Axis::Y);
+    if (settings.GetInitialRotationX() != 0.f) mesh.Rotate(settings.GetInitialRotationX(), Axis::X);
+    if (settings.GetInitialRotationZ() != 0.f) mesh.Rotate(settings.GetInitialRotationZ(), Axis::Z);
 
     Animation floatAnimation(mesh, settings);
 
@@ -75,7 +76,7 @@ int main(int argc, char** argv)
 
         floatAnimation.Update();
 
-        screen.Display(mesh, light);
+        screen.Display(mesh, light, floatAnimation.GetCurrentOffset(), floatAnimation.GetOrbitOffset());
 
         //usleep(settings.GetFrameDuration());
 		Sleep(settings.GetFrameDuration() / 1000);
